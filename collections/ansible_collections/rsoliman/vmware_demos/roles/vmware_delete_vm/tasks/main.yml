@@ -1,0 +1,20 @@
+---
+- name: Extract VM Name from inventory hostname
+  set_fact:
+    vm_name: "{{ inventory_hostname | regex_replace('_(([a-z]|[0-9]){8})\\-(([a-z]|[0-9]){4})\\-(([a-z]|[0-9]){4})\\-(([a-z]|[0-9]){4})\\-(([a-z]|[0-9]){12})', '') }}"
+
+- name: print inventory hostname
+  debug:
+    var: vm_name
+
+- name: Delete {{ vm_name }} from VCenter and Disk
+  community.vmware.vmware_guest:
+    validate_certs: no
+    datacenter: "{{ vm_datacenter }}"
+    esxi_hostname: "{{ vm_esxi_name }}"
+    folder: "{{ vm_folder }}"
+    name: "{{ vm_name }}"
+    state: absent
+    force: "true"
+  delegate_to: localhost
+  register: deleted_vm

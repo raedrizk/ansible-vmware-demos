@@ -1,0 +1,73 @@
+---
+# tasks file for vmware-create-vm-from-template
+
+# Standard HW Config
+- name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
+  community.vmware.vmware_guest:
+    validate_certs: no
+    datacenter: "{{ vm_datacenter }}"
+    folder: "{{ vm_folder }}"
+    name: "{{ vm_name }}"
+    state: poweredon
+    template: "{{ vm_template }}"
+    esxi_hostname: "{{ vm_esxi_name }}"
+    wait_for_ip_address: yes
+  register: created_vm
+  when: vm_disk_size is not defined and vm_mem_size is not defined and vm_cpu_count is not defined
+
+# Custom HW Config
+- name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
+    community.vmware.vmware_guest:
+    validate_certs: no
+    datacenter: "{{ vm_datacenter }}"
+    folder: "{{ vm_folder }}"
+    name: "{{ vm_name }}"
+    state: poweredon
+    template: "Template_{{ vm_template }}"
+    esxi_hostname: "{{ vm_esxi_name }}"
+    wait_for_ip_address: yes
+    disk:
+    - size_gb: "{{ vm_disk_size }}"
+      type: thin
+      datastore: datastore1
+      autoselect_datastore: no
+    hardware:
+      memory_gb: "{{ vm_mem_size }}"
+      num_cpus: "{{ vm_cpu_count }}"
+  register: created_vm
+  when: vm_disk_size is defined and vm_mem_size is defined and vm_cpu_count is defined
+
+- name: Add tags to a virtual machine for Env 
+    community.vmware.vmware_tag_manager:
+    tag_names:
+      - "{{ tag_env }}"
+    object_name: "{{ vm_name }}"
+    object_type: VirtualMachine
+    state: add
+  when: tag_env is defined
+
+- name: Add tags to a virtual machine for Backup 
+    community.vmware.vmware_tag_manager:
+    tag_names:
+      - Backup
+    object_name: "{{ vm_name }}"
+    object_type: VirtualMachine
+    state: add
+  when: tag_backup is defined and tag_backup == 'Yes'
+
+- name: Print new machine info
+  ansible.builtin.debug: 
+    var: created_vm
+
+- name: Setting Stats for the new VM 
+  ansible.builtin.set_stats:
+    data:
+      new_vm_name: "{{ vm_name }}"
+      new_vm_os: "{{ created_vm.instance.hw_guest_full_name }}"
+      new_vm_ip: "{{ created_vm.instance.ipv4 }}"
+      new_vm_provisioner: Ansible
+      #for SNOW Workflows
+      ci_name: "{{ vm_name }}"
+      ci_ip: "{{ created_vm.instance.ipv4 }}"
+      ci_os: "{{ new_vm_os }}"
+      ci_provisioner: "{{ new_vm_provisioner | default('Ansible') }}"

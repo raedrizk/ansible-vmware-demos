@@ -1,0 +1,7 @@
+---
+- name: Get ESXI Hosts and create Inventory
+  hosts: all
+  gather_facts: false
+  roles:
+    - rsoliman.vmware_demos.vmware_create_ESXI_tower_inventory
+

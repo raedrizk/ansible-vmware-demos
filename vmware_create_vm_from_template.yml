@@ -1,0 +1,6 @@
+---
+- name: Create a New VM in VCenter using a Template
+  hosts: all
+  gather_facts: false
+  roles:
+    - rsoliman.vmware_demos.vmware_create_vm_from_template

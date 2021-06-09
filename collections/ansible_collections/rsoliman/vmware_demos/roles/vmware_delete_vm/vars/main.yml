@@ -1,0 +1,6 @@
+---
+# vars file for vmware-delete-vm
+vm_datacenter: "{{ vm_datacenter_choice | default('foxhound') }}"
+vm_esxi_name: "{{ vm_esxi_name_choice | default('esxi1.foxhound.unit') }}"
+vm_folder: "{{ vm_folder_choice | default('/foxhound/vm') }}"
+vm_name: "{{ vm_name_choice | default('ansibleCreated') }}"

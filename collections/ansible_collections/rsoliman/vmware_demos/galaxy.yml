@@ -1,0 +1,24 @@
+namespace: rsoliman
+name: vmware_demos
+version: 1.0.0
+readme: README.md
+authors:
+- Raed Soliman <raedrizk@gmail.com>
+
+description: A collection of roles used to demo the automation of common VMware tasks using Ansible.
+
+license:
+- "MIT"
+
+tags: ['vmware','vcenter','esxi','demo','ansible','raedrizk','rsoliman']
+
+dependencies:
+
+    "vmware.vmware_rest": "*"
+    "awx.awx": "*"
+    "community.vmware": "*"
+    "ansible.builtin": "*"
+
+repository: http://example.com/repository
+homepage: http://example.com
+issues: http://example.com/issue/tracker

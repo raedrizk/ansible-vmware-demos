@@ -1,0 +1,15 @@
+---
+- name: Find Default VM Folder
+  hosts: all
+  gather_facts: false
+  tasks:
+  #Locate the default folder that the vCenter appliance is installed in
+    - name: Find Guest's Folder using name
+      community.vmware.vmware_guest_find:
+        validate_certs: no
+        name: VMware vCenter Server Appliance
+      delegate_to: localhost
+      register: vm_folder
+
+    - ansible.builtin.debug:
+        var: vm_folder

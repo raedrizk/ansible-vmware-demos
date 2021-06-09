@@ -1,0 +1,6 @@
+---
+collections:
+- community.vmware
+- vmware.vmware_rest
+- awx.awx
+

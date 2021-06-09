@@ -1,0 +1,29 @@
+---
+# tasks file for vmware-restore-snapshot
+- name: Extract VM Name from inventory hostname
+  set_fact:
+    vm_name: "{{ inventory_hostname | regex_replace('_(([a-z]|[0-9]){8})\\-(([a-z]|[0-9]){4})\\-(([a-z]|[0-9]){4})\\-(([a-z]|[0-9]){4})\\-(([a-z]|[0-9]){12})', '') }}"
+
+- name: print inventory hostname
+  debug:
+    var: vm_name
+
+- name: Restore snapshot
+  community.vmware.vmware_guest_snapshot:
+    validate_certs: no
+    datacenter: "{{ vm_datacenter }}"
+    folder: "{{ vm_folder }}"
+    name: "{{ vm_name }}"
+    state: revert
+    snapshot_name: ansible_preupdate_snapshot_{{ vm_name }}
+  connection: local
+  delegate_to: localhost
+  become: false
+
+- name: Wait for the virtual machine to start back up after restore
+  community.vmware.vmware_guest_powerstate:    
+    name: "{{ vm_name }}"
+    state: powered-on
+    state_change_timeout: 360
+  connection: local
+  delegate_to: localhost

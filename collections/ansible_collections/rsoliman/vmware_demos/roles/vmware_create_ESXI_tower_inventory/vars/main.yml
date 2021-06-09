@@ -1,0 +1,5 @@
+---
+# vars file for vmware_create_ESXI_tower_inventory
+inventory_name: "{{ inventory_name_choice | default('ESXi Hosts') }}"
+inventory_desc: "{{ inventory_desc_choice | default('Inventory containing all ESXi hosts returned by VCenter') }}"
+inventory_org: "{{ inventory_org_choice | default('FoxHound') }}"

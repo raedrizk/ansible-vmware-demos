@@ -1,0 +1,7 @@
+---
+- name: Take snapshot of VMs running in a datacenter in VCenter
+  hosts: all
+  gather_facts: false
+  roles:
+    - rsoliman.vmware_demos.vmware_create_snapshot
+

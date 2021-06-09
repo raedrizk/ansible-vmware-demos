@@ -1,0 +1,7 @@
+---
+- name: Delete a VM in VCenter
+  hosts: all
+  gather_facts: false
+  roles:
+    - rsoliman.vmware_demos.vmware_delete_vm
+
