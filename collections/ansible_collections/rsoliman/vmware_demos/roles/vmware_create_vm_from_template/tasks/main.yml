@@ -79,5 +79,5 @@
       #for SNOW Workflows
       ci_name: "{{ vm_name }}"
       ci_ip: "{{ created_vm.instance.ipv4 }}"
-      ci_os: "{{ new_vm_os }}"
+      ci_os: "{{ new_vm_os if (new_vm_os is defined and new_vm_os != '') | default ('Linux') }}"
       ci_provisioner: "{{ new_vm_provisioner | default('Ansible') }}"
