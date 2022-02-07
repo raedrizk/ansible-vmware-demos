@@ -17,7 +17,7 @@
 
 # Custom HW Config
 - name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
-    community.vmware.vmware_guest:
+  community.vmware.vmware_guest:
     validate_certs: no
     datacenter: "{{ vm_datacenter }}"
     folder: "{{ vm_folder }}"
@@ -38,7 +38,7 @@
   when: vm_disk_size is defined and vm_mem_size is defined and vm_cpu_count is defined
 
 - name: Add tags to a virtual machine for Env 
-    community.vmware.vmware_tag_manager:
+  community.vmware.vmware_tag_manager:
     tag_names:
       - "{{ tag_env }}"
     object_name: "{{ vm_name }}"
@@ -47,7 +47,7 @@
   when: tag_env is defined
 
 - name: Add tags to a virtual machine for Backup 
-    community.vmware.vmware_tag_manager:
+  community.vmware.vmware_tag_manager:
     tag_names:
       - Backup
     object_name: "{{ vm_name }}"
