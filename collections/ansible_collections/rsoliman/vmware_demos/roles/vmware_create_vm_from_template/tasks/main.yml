@@ -12,8 +12,13 @@
     template: "{{ vm_template }}"
     esxi_hostname: "{{ vm_esxi_name }}"
     wait_for_ip_address: yes
-  register: created_vm
+  register: temp_created_vm
   when: vm_disk_size is not defined or vm_mem_size is not defined or vm_cpu_count is not defined or vm_disk_size == "" or vm_mem_size == "" or vm_cpu_count == ""
+
+- name: set fact for new vm
+  ansible.builtit.set_fact:
+     created_vm: "{{ temp_created_vm }}"
+  when: create_vm.skip_reason is not defined
 
 # Custom HW Config
 - name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
@@ -36,6 +41,11 @@
       num_cpus: "{{ vm_cpu_count }}"
   register: created_vm
   when: vm_disk_size is defined and vm_mem_size is defined and vm_cpu_count is defined and vm_disk_size != "" and vm_mem_size != "" and vm_cpu_count != ""
+
+- name: set fact for new vm
+  ansible.builtit.set_fact:
+     created_vm: "{{ temp_created_vm }}"
+  when: create_vm.skip_reason is not defined
 
 - name: Add tags to a virtual machine for Env 
   community.vmware.vmware_tag_manager:
