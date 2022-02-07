@@ -13,7 +13,7 @@
     esxi_hostname: "{{ vm_esxi_name }}"
     wait_for_ip_address: yes
   register: created_vm
-  when: vm_disk_size is not defined and vm_mem_size is not defined and vm_cpu_count is not defined
+  when: (vm_disk_size is not defined or vm_mem_size is or defined and vm_cpu_count is not defined) or vm_disk_size == "" or vm_mem_size == "" or vm_cpu_count == ""
 
 # Custom HW Config
 - name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
@@ -35,7 +35,7 @@
       memory_gb: "{{ vm_mem_size }}"
       num_cpus: "{{ vm_cpu_count }}"
   register: created_vm
-  when: vm_disk_size is defined and vm_mem_size is defined and vm_cpu_count is defined
+  when: vm_disk_size is defined and vm_mem_size is defined and vm_cpu_count is defined and vm_disk_size != "" and vm_mem_size != "" and vm_cpu_count != ""
 
 - name: Add tags to a virtual machine for Env 
   community.vmware.vmware_tag_manager:
@@ -44,7 +44,7 @@
     object_name: "{{ vm_name }}"
     object_type: VirtualMachine
     state: add
-  when: tag_env is defined
+  when: tag_env is defined and tag_env != ""
 
 - name: Add tags to a virtual machine for Backup 
   community.vmware.vmware_tag_manager:
