@@ -13,7 +13,7 @@
     esxi_hostname: "{{ vm_esxi_name }}"
     wait_for_ip_address: yes
   register: created_vm
-  when: (vm_disk_size is not defined or vm_mem_size is or defined and vm_cpu_count is not defined) or vm_disk_size == "" or vm_mem_size == "" or vm_cpu_count == ""
+  when: vm_disk_size is not defined or vm_mem_size is not defined or vm_cpu_count is not defined or vm_disk_size == "" or vm_mem_size == "" or vm_cpu_count == ""
 
 # Custom HW Config
 - name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
