@@ -15,7 +15,7 @@
     folder: "{{ vm_folder }}"
     name: "{{ vm_name }}"
     state: revert
-    snapshot_name: ansible_preupdate_snapshot_{{ vm_name }}
+    snapshot_name: ansible_managed_snapshot_{{ vm_name }}
   connection: local
   delegate_to: localhost
   become: false

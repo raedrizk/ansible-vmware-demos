@@ -9,13 +9,13 @@
     var: vm_name
 
 - name: Delete snapshot
-    community.vmware.vmware_guest_snapshot:
+  community.vmware.vmware_guest_snapshot:
     validate_certs: no
     datacenter: "{{ vm_datacenter }}"
     folder: "{{ vm_folder }}"
     name: "{{ vm_name }}"
     state: absent
-    snapshot_name: ansible_preupdate_snapshot_{{ vm_name }}
+    snapshot_name: ansible_managed_snapshot_{{ vm_name }}
   connection: local
   delegate_to: localhost
   become: false

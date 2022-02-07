@@ -7,7 +7,7 @@
 - name: print inventory hostname
   debug:
     var: vm_name
-
+    
 - name: create snapshot
   community.vmware.vmware_guest_snapshot:
     validate_certs: no
@@ -15,7 +15,7 @@
     folder: "{{ vm_folder }}"
     name: "{{ vm_name }}"
     state: present
-    snapshot_name: ansible_preupdate_snapshot_{{ vm_name }}
+    snapshot_name: ansible_managed_snapshot_{{ vm_name }}
   connection: local
   delegate_to: localhost
   become: false

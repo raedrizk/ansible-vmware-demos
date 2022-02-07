@@ -6,14 +6,14 @@
     register: my_hosts
 
   - name: Remove Existing ESXI inventory
-    awx.awx.tower_inventory:
+    ansible.controller.tower_inventory:
       name: "{{ inventory_name }}"
       description: "{{ inventory_desc }}"
       organization: "{{ inventory_org}}"
       state: absent
 
   - name: Add ESXI inventory tower inventory
-    awx.awx.tower_inventory:
+    ansible.controller.tower_inventory:
       name: "{{ inventory_name }}"
       description: "{{ inventory_desc }}"
       organization: "{{ inventory_org}}"
@@ -21,7 +21,7 @@
 
 
   - name: Add ESXi hosts to tower inventory
-    awx.awx.tower_host:
+    ansible.controller.tower_host:
       name: "{{ item.name }}"
       description: "ESXi host imported from VCenter"
       inventory: "{{ inventory_name }}"
