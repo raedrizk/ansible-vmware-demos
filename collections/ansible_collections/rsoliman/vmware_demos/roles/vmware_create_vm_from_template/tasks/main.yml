@@ -16,7 +16,7 @@
   when: vm_disk_size is not defined or vm_mem_size is not defined or vm_cpu_count is not defined or vm_disk_size == "" or vm_mem_size == "" or vm_cpu_count == ""
 
 - name: set fact for new vm
-  ansible.builtit.set_fact:
+  ansible.builtin.set_fact:
      created_vm: "{{ temp_created_vm }}"
   when: create_vm.skip_reason is not defined
 
@@ -43,7 +43,7 @@
   when: vm_disk_size is defined and vm_mem_size is defined and vm_cpu_count is defined and vm_disk_size != "" and vm_mem_size != "" and vm_cpu_count != ""
 
 - name: set fact for new vm
-  ansible.builtit.set_fact:
+  ansible.builtin.set_fact:
      created_vm: "{{ temp_created_vm }}"
   when: create_vm.skip_reason is not defined
 
