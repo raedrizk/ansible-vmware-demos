@@ -37,7 +37,7 @@
       datastore: datastore1
       autoselect_datastore: no
     hardware:
-      memory_gb: "{{ vm_mem_size }}"
+      memory_mb: "{{ vm_mem_size }}"
       num_cpus: "{{ vm_cpu_count }}"
   register: created_vm
   when: vm_disk_size is defined and vm_mem_size is defined and vm_cpu_count is defined and vm_disk_size != "" and vm_mem_size != "" and vm_cpu_count != ""
