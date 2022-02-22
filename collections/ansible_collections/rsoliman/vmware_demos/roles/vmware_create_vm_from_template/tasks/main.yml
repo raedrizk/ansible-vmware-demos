@@ -54,7 +54,7 @@
     hardware:
       memory_mb: "{{ vm_mem_size }}"
       num_cpus: "{{ vm_cpu_count }}"
-  register: created_vm
+  register: temp_created_vm
   when: vm_disk_size is defined and vm_mem_size is defined and vm_cpu_count is defined and vm_disk_size != "" and vm_mem_size != "" and vm_cpu_count != ""
 
 - name: set fact for new vm
