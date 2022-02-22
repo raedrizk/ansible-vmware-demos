@@ -2,6 +2,21 @@
 # tasks file for vmware-create-vm-from-template
 
 # Standard HW Config
+- name: seting fact for correct datastore
+  ansible.builtin.set_fact:
+    data_store_name: datastore0
+  when: '"0" in vm_esxi_name'
+
+- name: seting fact for correct datastore
+  ansible.builtin.set_fact:
+    data_store_name: datastore1
+  when: '"1" in vm_esxi_name'
+
+- name: seting fact for correct datastore
+  ansible.builtin.set_fact:
+    data_store_name: datastore2
+  when: '"2" in vm_esxi_name'
+
 - name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
   community.vmware.vmware_guest:
     validate_certs: no
@@ -28,13 +43,13 @@
     folder: "{{ vm_folder }}"
     name: "{{ vm_name }}"
     state: poweredon
-    template: "Template_{{ vm_template }}"
+    template: "{{ vm_template }}"
     esxi_hostname: "{{ vm_esxi_name }}"
     wait_for_ip_address: yes
     disk:
     - size_gb: "{{ vm_disk_size }}"
       type: thin
-      datastore: datastore1
+      datastore: "{{ data_store_name }}"
       autoselect_datastore: no
     hardware:
       memory_mb: "{{ vm_mem_size }}"
