@@ -1,0 +1,17 @@
+---
+- name: testing info collected from rest info modues
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: Get guest networking information
+    vmware.vmware_rest.vcenter_vm_guest_networking_info:
+      vm: 'aed7af92-37bd-5df0-8c76-2f508c78d1e4'
+
+  - name: Get guest network interfaces information
+    vmware.vmware_rest.vcenter_vm_guest_networking_interfaces_info:
+      vm: 'aed7af92-37bd-5df0-8c76-2f508c78d1e4'
+
+  - name: Get guest network routes information
+    vmware.vmware_rest.vcenter_vm_guest_networking_routes_info:
+      vm: 'aed7af92-37bd-5df0-8c76-2f508c78d1e4'
