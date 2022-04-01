@@ -1,0 +1,27 @@
+---
+- name: testing info collected from rest info modues
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Look up the VM called {{ vm_name }} in the inventory
+    register: search_result
+    vmware.vmware_rest.vcenter_vm_info:
+      filter_names:
+      - "{{ vm_name }}"
+
+  - name: Collect information about a specific VM
+    vmware.vmware_rest.vcenter_vm_info:
+      vm: '{{ search_result.value[0].vm }}'
+    register: vminfo
+
+  - name: Get guest networking information
+    vmware.vmware_rest.vcenter_vm_guest_networking_info:
+      vm: '{{ vminfo.id }}'
+
+  - name: Get guest network interfaces information
+    vmware.vmware_rest.vcenter_vm_guest_networking_interfaces_info:
+      vm: '{{ vminfo.id }}'
+
+  - name: Get guest network routes information
+    vmware.vmware_rest.vcenter_vm_guest_networking_routes_info:
+      vm: '{{ vminfo.id }}'
