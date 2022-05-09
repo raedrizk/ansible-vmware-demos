@@ -33,7 +33,7 @@
 - name: set fact for new vm
   ansible.builtin.set_fact:
      created_vm: "{{ temp_created_vm }}"
-  when: create_vm.skip_reason is not defined
+  when: temp_created_vm.skip_reason is not defined
 
 # Custom HW Config
 - name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
@@ -60,7 +60,7 @@
 - name: set fact for new vm
   ansible.builtin.set_fact:
      created_vm: "{{ temp_created_vm }}"
-  when: create_vm.skip_reason is not defined
+  when: temp_created_vm.skip_reason is not defined
 
 - name: Add tags to a virtual machine for Env 
   community.vmware.vmware_tag_manager:
