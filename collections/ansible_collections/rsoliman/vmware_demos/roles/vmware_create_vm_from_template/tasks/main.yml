@@ -96,3 +96,4 @@
       ci_ip: "{{ created_vm.instance.ipv4 }}"
       ci_os: "{{ new_vm_os if (new_vm_os is defined and new_vm_os != '') else 'Linux' | default ('Linux') }}"
       ci_provisioner: "{{ new_vm_provisioner | default('Ansible') }}"
+      ci_manufacturer: "VMWare"
