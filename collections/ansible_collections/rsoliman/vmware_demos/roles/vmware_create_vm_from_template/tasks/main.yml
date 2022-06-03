@@ -88,7 +88,7 @@
   ansible.builtin.set_stats:
     data:
       new_vm_name: "{{ vm_name }}"
-      new_vm_os: "{{ created_vm.instance.hw_guest_full_name }}"
+      new_vm_os: "{{ virtualmachine_ostype_choice if (virtualmachine_ostype_choice is defined and virtualmachine_ostype_choice != '') else 'Linux' | default ('Linux') }}"
       new_vm_ip: "{{ created_vm.instance.ipv4 }}"
       new_vm_provisioner: Ansible
       #for SNOW Workflows
