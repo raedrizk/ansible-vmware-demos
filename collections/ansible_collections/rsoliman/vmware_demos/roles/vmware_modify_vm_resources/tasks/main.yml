@@ -1,10 +1,9 @@
 ---
-- name: Shutdown the VM if required
+- name: Shutdown the VM
   community.vmware.vmware_guest_powerstate:    
     name: "{{ vm_name }}"
     state: powered-off
     state_change_timeout: 360
-  when: shutdown_vm is defined and shutdown_vm
 
 - name: modify and start virtual machine with the name {{ vm_name }}
   community.vmware.vmware_guest:
@@ -20,3 +19,9 @@
     wait_for_customization: true  
   register: temp_mod_vm
   when: vm_mem_size is defined and vm_cpu_count is defined and vm_mem_size != "" and vm_cpu_count != ""
+
+- name: Startup the VM
+  community.vmware.vmware_guest_powerstate:    
+    name: "{{ vm_name }}"
+    state: powered-on
+    state_change_timeout: 360
