@@ -19,4 +19,4 @@
       num_cpus: "{{ vm_cpu_count }}"
     wait_for_customization: true  
   register: temp_mod_vm
-  when: vm_mem_size is defined and vm_cpu_count is defined and and vm_mem_size != "" and vm_cpu_count != ""
+  when: vm_mem_size is defined and vm_cpu_count is defined and vm_mem_size != "" and vm_cpu_count != ""
