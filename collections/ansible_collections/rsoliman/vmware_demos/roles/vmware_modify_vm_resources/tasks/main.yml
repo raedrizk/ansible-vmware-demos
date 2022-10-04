@@ -4,8 +4,7 @@
     name: "{{ vm_name }}"
     state: powered-off
     state_change_timeout: 360
-  connection: local
-  delegate_to: localhost
+  when: shutdown_vm is defined and shutdown_vm
 
 - name: modify and start virtual machine with the name {{ vm_name }}
   community.vmware.vmware_guest:
