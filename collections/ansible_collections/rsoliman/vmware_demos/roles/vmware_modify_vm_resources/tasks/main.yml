@@ -1,0 +1,23 @@
+---
+- name: Shutdown the VM if required
+  community.vmware.vmware_guest_powerstate:    
+    name: "{{ vm_name }}"
+    state: powered-off
+    state_change_timeout: 360
+  connection: local
+  delegate_to: localhost
+
+- name: modify and start virtual machine with the name {{ vm_name }}
+  community.vmware.vmware_guest:
+    validate_certs: no
+    datacenter: "{{ vm_datacenter }}"
+    folder: "{{ vm_folder }}"
+    name: "{{ vm_name }}"
+    state: present
+    esxi_hostname: "{{ vm_esxi_name }}"
+    hardware:
+      memory_mb: "{{ vm_mem_size }}"
+      num_cpus: "{{ vm_cpu_count }}"
+    wait_for_customization: true  
+  register: temp_mod_vm
+  when: vm_mem_size is defined and vm_cpu_count is defined and and vm_mem_size != "" and vm_cpu_count != ""

@@ -1,0 +1,6 @@
+---
+- name: Modify a VM in VCenter
+  hosts: all
+  gather_facts: false
+  roles:
+    - rsoliman.vmware_demos.vmware_modify_vm_resources
