@@ -5,7 +5,7 @@
     state: powered-off
     state_change_timeout: 360
 
-- name: modify and start virtual machine with the name {{ vm_name }}
+- name: modify virtual machine with the name {{ vm_name }}
   community.vmware.vmware_guest:
     validate_certs: no
     datacenter: "{{ vm_datacenter }}"
