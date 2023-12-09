@@ -1,0 +1,135 @@
+---
+- name: Create a New VM in VCenter using a Template
+  hosts: all
+  gather_facts: false
+  tasks:
+  # Standard HW Config
+  - name: seting fact for correct datastore
+    ansible.builtin.set_fact:
+      data_store_name: datastore0
+    when: '"0" in vm_esxi_name'
+
+  - name: seting fact for correct datastore
+    ansible.builtin.set_fact:
+      data_store_name: datastore1
+    when: '"1" in vm_esxi_name'
+
+  - name: seting fact for correct datastore
+    ansible.builtin.set_fact:
+      data_store_name: datastore2
+    when: '"2" in vm_esxi_name'
+
+  - name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
+    vmware.vmware_rest.vcenter_vmtemplate_libraryitems:
+      vcenter_validate_certs: false
+      name: "{{ vm_name }}"
+      template_library_item: '{{ mylib_item.id }}'
+      placement:
+        cluster: "{{ lookup('vmware.vmware_rest.cluster_moid', '/my_dc/host/my_cluster')\
+          \ }}"
+        folder: "{{ lookup('vmware.vmware_rest.folder_moid', '/my_dc/vm') }}"
+        resource_pool: "{{ lookup('vmware.vmware_rest.resource_pool_moid', '/my_dc/host/my_cluster/Resources')\
+          \ }}"
+      state: deploy
+    register: my_new_vm
+
+
+
+  - name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
+    community.vmware.vmware_guest:
+      validate_certs: no
+      datacenter: "{{ vm_datacenter }}"
+      folder: "{{ vm_folder }}"
+      name: "{{ vm_name }}"
+      state: poweredon
+      template: "{{ vm_template }}"
+      esxi_hostname: "{{ vm_esxi_name }}"
+      wait_for_ip_address: yes
+    register: temp_created_vm
+    when: vm_disk_size is not defined or vm_mem_size is not defined or vm_cpu_count is not defined or vm_disk_size == "" or vm_mem_size == "" or vm_cpu_count == ""
+
+- name: set fact for new vm
+  ansible.builtin.set_fact:
+     created_vm: "{{ temp_created_vm }}"
+  when: temp_created_vm.skip_reason is not defined
+
+# Custom HW Config
+- name: Create and start a virtual machine in VCenter with the name {{ vm_name }} from the template {{ vm_template }}
+  community.vmware.vmware_guest:
+    validate_certs: no
+    datacenter: "{{ vm_datacenter }}"
+    folder: "{{ vm_folder }}"
+    name: "{{ vm_name }}"
+    state: poweredon
+    template: "{{ vm_template }}"
+    esxi_hostname: "{{ vm_esxi_name }}"
+    wait_for_ip_address: yes
+    disk:
+    - size_gb: "{{ vm_disk_size }}"
+      type: thin
+      datastore: "{{ data_store_name }}"
+      autoselect_datastore: no
+    hardware:
+      memory_mb: "{{ vm_mem_size }}"
+      num_cpus: "{{ vm_cpu_count }}"
+  register: temp_created_vm
+  when: vm_disk_size is defined and vm_mem_size is defined and vm_cpu_count is defined and vm_disk_size != "" and vm_mem_size != "" and vm_cpu_count != ""
+
+- name: set fact for new vm
+  ansible.builtin.set_fact:
+     created_vm: "{{ temp_created_vm }}"
+  when: temp_created_vm.skip_reason is not defined
+
+- name: Add tags to a virtual machine for Env 
+  community.vmware.vmware_tag_manager:
+    tag_names:
+      - "{{ tag_env }}"
+    object_name: "{{ vm_name }}"
+    object_type: VirtualMachine
+    state: add
+  when: tag_env is defined and tag_env != ""
+
+- name: Add tags to a virtual machine for Backup 
+  community.vmware.vmware_tag_manager:
+    tag_names:
+      - Backup
+    object_name: "{{ vm_name }}"
+    object_type: VirtualMachine
+    state: add
+  when: tag_backup is defined and tag_backup == 'Yes'
+
+- name: Print new machine info
+  ansible.builtin.debug: 
+    var: created_vm
+
+- name: Setting Stats for the new VM 
+  ansible.builtin.set_stats:
+    data:
+      new_vm_name: "{{ vm_name }}"
+      new_vm_os: "{{ virtualmachine_ostype_choice if (virtualmachine_ostype_choice is defined and virtualmachine_ostype_choice != '') else 'Linux' | default ('Linux') }}"
+      new_vm_ip: "{{ created_vm.instance.ipv4 }}"
+      new_vm_provisioner: Ansible
+      #for SNOW Workflows
+      ci_name: "{{ vm_name }}"
+      ci_ip: "{{ created_vm.instance.ipv4 }}"
+      ci_os: "{{ virtualmachine_ostype_choice if (virtualmachine_ostype_choice is defined and virtualmachine_ostype_choice != '') else 'Linux' | default ('Linux') }}"
+      ci_provisioner: "{{ new_vm_provisioner | default('Ansible') }}"
+      ci_manufacturer: "VMWare"
+
+
+
+
+
+- name: Deploy a new VM based on the template
+  vmware.vmware_rest.vcenter_vmtemplate_libraryitems:
+    name: foobar2002
+    library: '{{ ds_lib.id }}'
+    template_library_item: '{{ mylib_item.id }}'
+    placement:
+      cluster: "{{ lookup('vmware.vmware_rest.cluster_moid', '/my_dc/host/my_cluster')\
+        \ }}"
+      folder: "{{ lookup('vmware.vmware_rest.folder_moid', '/my_dc/vm') }}"
+      resource_pool: "{{ lookup('vmware.vmware_rest.resource_pool_moid', '/my_dc/host/my_cluster/Resources')\
+        \ }}"
+    state: deploy
+  register: my_new_vm
