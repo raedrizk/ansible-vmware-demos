@@ -16,7 +16,7 @@
     #name: "{{ vm_name }}"
     name: "{{ inventory_hostname }}"
     state: present
-    snapshot_name: ansible_managed_snapshot_{{ vm_name }}
+    snapshot_name: ansible_managed_snapshot_{{ inventory_hostname }}
   connection: local
   delegate_to: localhost
   become: false
