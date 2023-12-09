@@ -1,21 +1,13 @@
 ---
 # tasks file for vmware-delete-snapshot
-- name: Extract VM Name from inventory hostname
-  set_fact:
-    vm_name: "{{ inventory_hostname | regex_replace('_(([a-z]|[0-9]){8})\\-(([a-z]|[0-9]){4})\\-(([a-z]|[0-9]){4})\\-(([a-z]|[0-9]){4})\\-(([a-z]|[0-9]){12})', '') }}"
-
-- name: print inventory hostname
-  debug:
-    var: vm_name
-
 - name: Delete snapshot
   community.vmware.vmware_guest_snapshot:
     validate_certs: no
     datacenter: "{{ vm_datacenter }}"
     folder: "{{ vm_folder }}"
-    name: "{{ vm_name }}"
+    name: "{{ inventory_hostname }}"
     state: absent
-    snapshot_name: ansible_managed_snapshot_{{ vm_name }}
+    snapshot_name: ansible_managed_snapshot_{{ inventory_hostname }}
   connection: local
   delegate_to: localhost
   become: false
